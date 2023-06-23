@@ -1,0 +1,30 @@
+[
+  {
+    "id": 8209,
+    "username": "mukesh_kumar",
+    "password": "mukesh@123",
+    "firstname": "Mukesh",
+    "lastname": "Kumar"
+  },
+  {
+    "id": 513058,
+    "username": "rakesh_kumar",
+    "password": "rakesh@123",
+    "firstname": "Rakesh",
+    "lastname": "Kumar"
+  },
+  {
+    "id": 409885,
+    "username": "ramesh_kumar",
+    "password": "ramesh@123",
+    "firstname": "Ramesh",
+    "lastname": "Kumar"
+  },
+  {
+    "id": 157841,
+    "username": "ram_kumar",
+    "password": "ram@123",
+    "firstname": "ram",
+    "lastname": "Kumar"
+  }
+]

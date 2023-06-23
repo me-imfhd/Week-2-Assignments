@@ -29,9 +29,92 @@
   Testing the server - run `npm run test-authenticationServer` command in terminal
  */
 
-const express = require("express")
+const express = require("express");
+const fs = require("fs");
 const PORT = 3000;
+const bodyParser = require("body-parser");
 const app = express();
+app.use(bodyParser.json());
 // write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
+if (fs.existsSync("allUsers.json")) {
+} else {
+  const allUsers = [];
+  fs.writeFile("allUsers.json", JSON.stringify(allUsers), (err) => {
+    if (err) {
+      console.error("allUsers.json not created");
+    } else {
+      console.log("allUsers.json created");
+    }
+  });
+}
+app.post("/signup", (req, res) => {
+  const user = {
+    id: Math.floor(Math.random() * 1000000),
+    username: req.body.username,
+    password: req.body.password,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+  };
+  fs.readFile("allUsers.json", "utf-8", (err, data) => {
+    if (err) {
+      console.error("Error reading file:", err);
+      return;
+    }
+    try {
+      const users = JSON.parse(data);
 
+      users.push(user);
+
+      fs.writeFile("allUsers.json", JSON.stringify(users), (err) => {
+        if (err) {
+          console.error("Error writing file:", err);
+        } else {
+          console.log("New object added to the file successfully");
+        }
+      });
+    } catch (err) {
+      console.error("Error parsing JSON:", err);
+    }
+  });
+  res.status(200).json(user);
+  allUsers.push(user);
+});
+app.post("/login", (req, res) => {
+  fs.readFile("./allusers.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log("readFile not successful", err);
+    } else {
+      const thisUser = JSON.parse(data).find(
+        (user) => req.headers.username === user.username
+      );
+      if (!thisUser) {
+        return res.status(401).send("Username does not exists");
+      }
+      if (thisUser.password !== req.headers.password) {
+        return res.status(401).send("Password unauthorized");
+      }
+
+      return res.status(200).json({
+        id: thisUser.id,
+        firstname: thisUser.firstname,
+        lastname: thisUser.lastname,
+      });
+    }
+  });
+});
+
+app.get("/data", (req, res) => {
+  fs.readFile("./allusers.json", "utf-8", (err, data) => {
+    if (err) {
+      console.log("readFile not successful");
+    } else {
+      console.log("file read successful");
+      return res.status(200).send(data);
+    }
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Listening to port number ${PORT}`);
+});
 module.exports = app;
