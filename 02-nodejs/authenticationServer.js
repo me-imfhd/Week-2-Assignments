@@ -76,7 +76,7 @@ app.post("/signup", (req, res) => {
       console.error("Error parsing JSON:", err);
     }
   });
-  res.status(200).json(user);
+  res.status(201).json(user);
   allUsers.push(user);
 });
 app.post("/login", (req, res) => {
@@ -100,7 +100,6 @@ app.get("/data", (req, res) => {
     if (err) {
       console.log("readFile not successful");
     } else {
-      console.log("file read successful");
       const thisUser = JSON.parse(data).find(
         (user) => req.headers.username === user.username && req.headers.password === user.password
       );
@@ -117,6 +116,6 @@ app.get("/data", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Listening to port number ${PORT}`);
+  console.log(`Listening to port n  umber ${PORT}`);
 });
 module.exports = app;
