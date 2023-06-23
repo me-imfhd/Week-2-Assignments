@@ -85,20 +85,12 @@ app.post("/login", (req, res) => {
       console.log("readFile not successful", err);
     } else {
       const thisUser = JSON.parse(data).find(
-        (user) => req.headers.username === user.username
+        (user) => req.headers.username === user.username && req.headers.password === user.password
       );
       if (!thisUser) {
-        return res.status(401).send("Username does not exists");
+        return res.status(401).send("Unauthorized username or password");
       }
-      if (thisUser.password !== req.headers.password) {
-        return res.status(401).send("Password unauthorized");
-      }
-
-      return res.status(200).json({
-        id: thisUser.id,
-        firstname: thisUser.firstname,
-        lastname: thisUser.lastname,
-      });
+      return res.status(200).send("Login Successful")
     }
   });
 });
@@ -109,7 +101,17 @@ app.get("/data", (req, res) => {
       console.log("readFile not successful");
     } else {
       console.log("file read successful");
-      return res.status(200).send(data);
+      const thisUser = JSON.parse(data).find(
+        (user) => req.headers.username === user.username && req.headers.password === user.password
+      );
+      if(!thisUser){
+        return res.status(401).send("Unauthorized username or password");
+      }
+      res.status(200).json({
+        "firstname": thisUser.firstname,
+        "lastname": thisUser.lastname,
+        "username": thisUser.username
+      })
     }
   });
 });
